@@ -1,21 +1,25 @@
 import { Component } from '@angular/core';
-import { Observable } from 'rxjs';
 import { SpotifyService } from './spotify.service';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-
 export class AppComponent {
-  obsTrack : Observable<Object>;
+  query: string;
+  title = 'first-routed-app';
+  obsTrack: Observable<Object>;
+  results: Object;
+  constructor(public spotify: SpotifyService) {}
 
-  constructor(public spotify : SpotifyService){
-    this.obsTrack = spotify.searchTrack("lateralus");
-    this.obsTrack.subscribe((data)=>console.log(data));
+  submit(query:HTMLInputElement): void {
+    if (!query.value) {
+      return;
+    }
+    this.query = query.value;
+    this.obsTrack = this.spotify.searchTrack(this.query);
+    this.obsTrack.subscribe((data) => this.results = data);
   }
 }
-
-
